@@ -177,3 +177,21 @@ body::after {
   border-color: var(--accent);
   background: var(--accent-soft);
 }
+
+.column-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--glass-border-strong) transparent;
+}
+
+.column-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.column-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.column-scroll::-webkit-scrollbar-thumb {
+  background-color: var(--glass-border-strong);
+  border-radius: 9999px;
+}

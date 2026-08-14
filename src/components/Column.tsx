@@ -72,7 +72,7 @@ export function Column({
         <p className="px-1 font-mono text-[11px] font-medium text-ink-muted">{formatCurrency(total, locale)}</p>
       )}
 
-      <div className="flex flex-1 flex-col gap-2">
+      <div className="column-scroll flex max-h-[480px] flex-1 flex-col gap-2 overflow-y-auto pr-0.5">
         {leads.length === 0 && (
           <p className="rounded-2xl border border-dashed border-glass-border-strong p-4 text-center text-[11px] text-ink-faint">
             {t.board.emptyColumn}
