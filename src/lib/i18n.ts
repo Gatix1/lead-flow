@@ -90,7 +90,7 @@ const dictionaries: Record<Locale, Dictionary> = {
       subhead:
         "A drag-and-drop pipeline board — the same kind of internal tool that replaces a messy spreadsheet of leads and follow-ups. Move cards between stages, add or edit a lead, see the pipeline value update.",
       metaNote:
-        "This is the same kind of tool used to manage leads for this site — nothing here is saved, sent, or connected to any real system. Everything resets when you reload the page.",
+        "This is a demo — nothing here is saved, sent, or connected to any real system. Everything resets when you reload the page.",
       resetButton: "Reset demo data",
       resetConfirm: "Reset the board to the sample leads? Your changes will be lost.",
     },
@@ -172,7 +172,7 @@ const dictionaries: Record<Locale, Dictionary> = {
       subhead:
         "Un pipeline drag-and-drop — genul de instrument intern care înlocuiește o foaie de calcul dezordonată cu leaduri și urmăriri. Muți cardurile între etape, adaugi sau editezi un lead, vezi valoarea pipeline-ului actualizându-se.",
       metaNote:
-        "Acesta e genul de instrument folosit pentru a gestiona leadurile acestui site — nimic de aici nu e salvat, trimis sau conectat la vreun sistem real. Totul se resetează la reîncărcarea paginii.",
+        "Acesta este un demo — nimic de aici nu e salvat, trimis sau conectat la vreun sistem real. Totul se resetează la reîncărcarea paginii.",
       resetButton: "Resetează datele demo",
       resetConfirm: "Resetezi tabla la leadurile din exemplu? Modificările tale se vor pierde.",
     },
@@ -254,7 +254,7 @@ const dictionaries: Record<Locale, Dictionary> = {
       subhead:
         "Доска с перетаскиванием карточек — тот же внутренний инструмент, что заменяет беспорядочную таблицу с лидами и напоминаниями. Перемещайте карточки между этапами, добавляйте или редактируйте лида, смотрите, как обновляется сумма воронки.",
       metaNote:
-        "Это тот же тип инструмента, что используется для управления лидами этого сайта — ничего здесь не сохраняется, не отправляется и не подключено к реальной системе. При обновлении страницы всё сбрасывается.",
+        "Это демо — ничего здесь не сохраняется, не отправляется и не подключено к реальной системе. При обновлении страницы всё сбрасывается.",
       resetButton: "Сбросить демо-данные",
       resetConfirm: "Сбросить доску к примерам лидов? Ваши изменения будут потеряны.",
     },
