@@ -1,8 +1,10 @@
 import clsx from "clsx";
 import type { Lead, Stage } from "../lib/types";
 import { STAGE_ORDER } from "../lib/types";
-import { formatCurrency } from "../lib/format";
+import { formatCurrency, formatDate, isOverdue } from "../lib/format";
+import { getInitials } from "../lib/initials";
 import { getDictionary, type Locale } from "../lib/i18n";
+import { PriorityDot } from "./PriorityDot";
 
 interface LeadCardProps {
   lead: Lead;
@@ -17,6 +19,7 @@ interface LeadCardProps {
 
 export function LeadCard({ lead, locale, isDragging, onDragStart, onDragEnd, onEdit, onDelete, onMove }: LeadCardProps) {
   const t = getDictionary(locale);
+  const overdue = lead.followUpDate !== null && lead.stage !== "won" && lead.stage !== "lost" && isOverdue(lead.followUpDate);
 
   return (
     <div
@@ -34,9 +37,17 @@ export function LeadCard({ lead, locale, isDragging, onDragStart, onDragEnd, onE
       )}
     >
       <div className="flex items-start justify-between gap-2">
-        <div className="min-w-0">
-          <p className="truncate font-display text-sm font-semibold text-ink">{lead.name}</p>
-          <p className="truncate text-xs text-ink-muted">{lead.company}</p>
+        <div className="flex min-w-0 items-start gap-2">
+          <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-glass-border bg-glass font-mono text-[10px] font-semibold text-ink-muted">
+            {getInitials(lead.name)}
+          </div>
+          <div className="min-w-0">
+            <div className="flex items-center gap-1.5">
+              <PriorityDot priority={lead.priority} />
+              <p className="truncate font-display text-sm font-semibold text-ink">{lead.name}</p>
+            </div>
+            <p className="truncate text-xs text-ink-muted">{lead.company}</p>
+          </div>
         </div>
         <p className="shrink-0 font-mono text-[12px] font-semibold text-accent-text">
           {formatCurrency(lead.value, locale)}
@@ -44,6 +55,21 @@ export function LeadCard({ lead, locale, isDragging, onDragStart, onDragEnd, onE
       </div>
 
       {lead.notes && <p className="line-clamp-2 text-[11px] leading-relaxed text-ink-faint">{lead.notes}</p>}
+
+      {lead.followUpDate && (
+        <p
+          className={clsx(
+            "inline-flex w-fit items-center gap-1 rounded-full px-2 py-0.5 font-mono text-[10px] font-medium",
+            overdue ? "bg-accent-soft text-accent-text" : "bg-glass text-ink-faint",
+          )}
+        >
+          <svg aria-hidden="true" viewBox="0 0 24 24" className="h-2.5 w-2.5 fill-none stroke-current stroke-[2]">
+            <circle cx="12" cy="12" r="9" />
+            <path d="M12 7v5l3 3" />
+          </svg>
+          {overdue ? t.card.overdue : t.card.followUpOn(formatDate(lead.followUpDate, locale))}
+        </p>
+      )}
 
       <div className="mt-1 flex items-center justify-between gap-2">
         <select

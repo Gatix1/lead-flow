@@ -1,6 +1,6 @@
 import { useState } from "react";
-import type { Lead, LeadDraft, Stage } from "../lib/types";
-import { STAGE_ORDER } from "../lib/types";
+import type { Lead, LeadDraft, Priority, Stage } from "../lib/types";
+import { PRIORITY_ORDER, STAGE_ORDER } from "../lib/types";
 import { getDictionary, type Locale } from "../lib/i18n";
 
 interface LeadModalProps {
@@ -18,6 +18,8 @@ export function LeadModal({ locale, editingLead, defaultStage, onSave, onClose }
   const [value, setValue] = useState(String(editingLead?.value ?? ""));
   const [notes, setNotes] = useState(editingLead?.notes ?? "");
   const [stage, setStage] = useState<Stage>(editingLead?.stage ?? defaultStage);
+  const [priority, setPriority] = useState<Priority>(editingLead?.priority ?? "warm");
+  const [followUpDate, setFollowUpDate] = useState(editingLead?.followUpDate ?? "");
   const [error, setError] = useState(false);
 
   function handleSubmit(event: React.FormEvent) {
@@ -33,6 +35,8 @@ export function LeadModal({ locale, editingLead, defaultStage, onSave, onClose }
         value: Number(value) || 0,
         notes: notes.trim(),
         stage,
+        priority,
+        followUpDate: followUpDate || null,
       },
       editingLead?.id ?? null,
     );
@@ -104,6 +108,33 @@ export function LeadModal({ locale, editingLead, defaultStage, onSave, onClose }
                   </option>
                 ))}
               </select>
+            </label>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            <label className="flex flex-col gap-1.5">
+              <span className="text-xs font-medium text-ink-muted">{t.modal.priorityLabel}</span>
+              <select
+                value={priority}
+                onChange={(event) => setPriority(event.target.value as Priority)}
+                className="rounded-xl border border-glass-border bg-bg-elevated px-3 py-2 text-sm text-ink outline-none transition-colors focus:border-accent"
+              >
+                {PRIORITY_ORDER.map((option) => (
+                  <option key={option} value={option}>
+                    {t.priority[option]}
+                  </option>
+                ))}
+              </select>
+            </label>
+
+            <label className="flex flex-col gap-1.5">
+              <span className="text-xs font-medium text-ink-muted">{t.modal.followUpLabel}</span>
+              <input
+                type="date"
+                value={followUpDate ?? ""}
+                onChange={(event) => setFollowUpDate(event.target.value)}
+                className="rounded-xl border border-glass-border bg-bg-elevated px-3 py-2 font-mono text-sm text-ink outline-none transition-colors focus:border-accent"
+              />
             </label>
           </div>
 

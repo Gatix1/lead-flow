@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import type { Stage } from "./types";
+import type { Priority, Stage } from "./types";
 
 export type Locale = "ro" | "ru" | "en";
 
@@ -21,6 +21,16 @@ interface Dictionary {
     resetConfirm: string;
   };
   stages: Record<Stage, string>;
+  priority: Record<Priority, string>;
+  search: {
+    placeholder: string;
+    noResults: string;
+  };
+  summary: {
+    totalLeads: (n: number) => string;
+    pipelineValue: string;
+    winRate: string;
+  };
   board: {
     leadsCount: (n: number) => string;
     addLead: string;
@@ -29,8 +39,10 @@ interface Dictionary {
   card: {
     editLabel: string;
     deleteLabel: string;
-    deleteConfirm: string;
     moveLabel: string;
+    priorityLabel: string;
+    overdue: string;
+    followUpOn: (date: string) => string;
   };
   modal: {
     addTitle: string;
@@ -44,9 +56,15 @@ interface Dictionary {
     notesLabel: string;
     notesPlaceholder: string;
     stageLabel: string;
+    priorityLabel: string;
+    followUpLabel: string;
     cancelButton: string;
     saveButton: string;
     nameRequired: string;
+  };
+  toast: {
+    deleted: string;
+    undo: string;
   };
   footer: {
     disclaimer: string;
@@ -83,6 +101,20 @@ const dictionaries: Record<Locale, Dictionary> = {
       won: "Won",
       lost: "Lost",
     },
+    priority: {
+      hot: "Hot",
+      warm: "Warm",
+      cold: "Cold",
+    },
+    search: {
+      placeholder: "Search leads by name, company, or notes",
+      noResults: "No leads match your search",
+    },
+    summary: {
+      totalLeads: (n) => `${n} ${n === 1 ? "lead" : "leads"} total`,
+      pipelineValue: "Pipeline value",
+      winRate: "Win rate",
+    },
     board: {
       leadsCount: (n) => `${n} ${n === 1 ? "lead" : "leads"}`,
       addLead: "Add lead",
@@ -91,8 +123,10 @@ const dictionaries: Record<Locale, Dictionary> = {
     card: {
       editLabel: "Edit lead",
       deleteLabel: "Delete lead",
-      deleteConfirm: "Delete this lead? This can't be undone.",
       moveLabel: "Move to stage",
+      priorityLabel: "Priority",
+      overdue: "Overdue",
+      followUpOn: (date) => `Follow up ${date}`,
     },
     modal: {
       addTitle: "Add a lead",
@@ -106,9 +140,15 @@ const dictionaries: Record<Locale, Dictionary> = {
       notesLabel: "Notes",
       notesPlaceholder: "Anything worth remembering about this lead",
       stageLabel: "Stage",
+      priorityLabel: "Priority",
+      followUpLabel: "Follow-up date",
       cancelButton: "Cancel",
       saveButton: "Save lead",
       nameRequired: "Name is required.",
+    },
+    toast: {
+      deleted: "Lead deleted.",
+      undo: "Undo",
     },
     footer: {
       disclaimer: "Demo data only — nothing here is saved, sent, or connected to any real system.",
@@ -143,6 +183,20 @@ const dictionaries: Record<Locale, Dictionary> = {
       won: "Câștigat",
       lost: "Pierdut",
     },
+    priority: {
+      hot: "Fierbinte",
+      warm: "Cald",
+      cold: "Rece",
+    },
+    search: {
+      placeholder: "Caută leaduri după nume, companie sau notițe",
+      noResults: "Niciun lead nu corespunde căutării",
+    },
+    summary: {
+      totalLeads: (n) => `${n} ${n === 1 ? "lead" : "leaduri"} în total`,
+      pipelineValue: "Valoare pipeline",
+      winRate: "Rată de succes",
+    },
     board: {
       leadsCount: (n) => `${n} ${n === 1 ? "lead" : "leaduri"}`,
       addLead: "Adaugă lead",
@@ -151,8 +205,10 @@ const dictionaries: Record<Locale, Dictionary> = {
     card: {
       editLabel: "Editează lead",
       deleteLabel: "Șterge lead",
-      deleteConfirm: "Ștergi acest lead? Acțiunea nu poate fi anulată.",
       moveLabel: "Mută la etapa",
+      priorityLabel: "Prioritate",
+      overdue: "Întârziat",
+      followUpOn: (date) => `Urmărire ${date}`,
     },
     modal: {
       addTitle: "Adaugă un lead",
@@ -166,9 +222,15 @@ const dictionaries: Record<Locale, Dictionary> = {
       notesLabel: "Notițe",
       notesPlaceholder: "Orice merită reținut despre acest lead",
       stageLabel: "Etapă",
+      priorityLabel: "Prioritate",
+      followUpLabel: "Dată de urmărire",
       cancelButton: "Anulează",
       saveButton: "Salvează lead",
       nameRequired: "Numele este obligatoriu.",
+    },
+    toast: {
+      deleted: "Lead șters.",
+      undo: "Anulează",
     },
     footer: {
       disclaimer: "Doar date demo — nimic de aici nu e salvat, trimis sau conectat la vreun sistem real.",
@@ -199,9 +261,23 @@ const dictionaries: Record<Locale, Dictionary> = {
     stages: {
       new: "Новый",
       contacted: "Связались",
-      proposal: "Отправлено предложение",
+      proposal: "Предложение",
       won: "Успешно",
       lost: "Отказ",
+    },
+    priority: {
+      hot: "Горячий",
+      warm: "Тёплый",
+      cold: "Холодный",
+    },
+    search: {
+      placeholder: "Поиск по имени, компании или заметкам",
+      noResults: "Нет лидов по вашему запросу",
+    },
+    summary: {
+      totalLeads: (n) => `Всего ${n} ${n === 1 ? "лид" : "лидов"}`,
+      pipelineValue: "Сумма воронки",
+      winRate: "Конверсия",
     },
     board: {
       leadsCount: (n) => `${n} ${n === 1 ? "лид" : "лидов"}`,
@@ -211,8 +287,10 @@ const dictionaries: Record<Locale, Dictionary> = {
     card: {
       editLabel: "Редактировать лида",
       deleteLabel: "Удалить лида",
-      deleteConfirm: "Удалить этого лида? Действие необратимо.",
       moveLabel: "Переместить на этап",
+      priorityLabel: "Приоритет",
+      overdue: "Просрочено",
+      followUpOn: (date) => `Напоминание ${date}`,
     },
     modal: {
       addTitle: "Добавить лида",
@@ -226,9 +304,15 @@ const dictionaries: Record<Locale, Dictionary> = {
       notesLabel: "Заметки",
       notesPlaceholder: "Всё, что стоит помнить об этом лиде",
       stageLabel: "Этап",
+      priorityLabel: "Приоритет",
+      followUpLabel: "Дата напоминания",
       cancelButton: "Отмена",
       saveButton: "Сохранить лида",
       nameRequired: "Имя обязательно.",
+    },
+    toast: {
+      deleted: "Лид удалён.",
+      undo: "Отменить",
     },
     footer: {
       disclaimer: "Только демо-данные — ничего здесь не сохраняется, не отправляется и не подключено к реальной системе.",

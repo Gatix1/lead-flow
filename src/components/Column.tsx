@@ -60,12 +60,12 @@ export function Column({
         isDropTarget && "column-drop-target",
       )}
     >
-      <div className="flex items-center justify-between px-1 pt-1">
-        <div className="flex items-center gap-2">
-          <span className={clsx("h-1.5 w-1.5 rounded-full", STAGE_DOT[stage])} />
-          <p className="font-display text-sm font-semibold text-ink">{t.stages[stage]}</p>
+      <div className="flex items-center justify-between gap-2 px-1 pt-1">
+        <div className="flex min-w-0 items-center gap-2">
+          <span className={clsx("h-1.5 w-1.5 shrink-0 rounded-full", STAGE_DOT[stage])} />
+          <p className="truncate font-display text-sm font-semibold text-ink">{t.stages[stage]}</p>
         </div>
-        <p className="font-mono text-[11px] text-ink-faint">{t.board.leadsCount(leads.length)}</p>
+        <p className="shrink-0 font-mono text-[11px] text-ink-faint">{t.board.leadsCount(leads.length)}</p>
       </div>
 
       {total > 0 && (
